@@ -144,10 +144,8 @@ if (!file.exists(regcat_plot_output_path)) {
   cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
 }
 
-
 # Summary statistics for DFMT (Decayed, Filled, Missing Teeth)
 dfmt_summary <- dental_data %>%
-  group_by(DepCat) %>%
   summarise(across(DFMT, 
                    .fns = list(
                      N = ~sum(!is.na(.)),          # Sample size
@@ -165,26 +163,100 @@ dfmt_summary <- dental_data %>%
 cat("\nSummary statistics calculated for decayed, filled or missing teeth:\n")
 print.data.frame(dfmt_summary)
 
-# Visualisation: Plot for DFMT
+# Visualisation: Value Plot for DFMT
 dfmt_value_plot <- ggplot(dental_data, aes(x = "DFMT", y = DFMT)) +
   geom_point(position = position_jitter(width = 0.2), shape = 19, size = 3, alpha = 0.7) +
-  labs(title = "Individual Value Plot of DFMT", x = "", y = "Number of teeth with active decay") +
+  labs(title = "Individual Value Plot of DFMT", x = "", y = "Number of decayed, filled or missing teeth") +
   theme(axis.text.x = element_blank())  # To hide x-axis label since it's not meaningful in this context
 
 # Save the plot with checking for existing file
-dfmt_plot_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_value_plot.png")
+dfmt_value_plot_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_value_plot.png")
 
-if (!file.exists(regcat_plot_output_path)) {
-  ggsave(dfmt_plot_output_path, plot = dfmt_value_plot, width = 6, height = 4)
+if (!file.exists(dfmt_plot_output_path)) {
+  ggsave(dfmt_value_plot_output_path, plot = dfmt_value_plot, width = 6, height = 4)
   cat("\nPlot for variable 'DFMT' saved successfully.\n")
 } else {
   cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
 }
 
+# Visualisation: Box Plot for DFMT
+dfmt_box_plot <- ggplot(dental_data, aes(x = "DFMT", y = DFMT)) +
+  geom_boxplot(fill = plot_fill_colour) +
+  labs(title = "Box Plot of DFMT", x = "", y = "Number of decayed, filled or missing teeth") +
+  theme(axis.text.x = element_blank())  # To hide x-axis label since it's not meaningful in this context
+
+# Save the plot with checking for existing file
+dfmt_boxplot_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_box_plot.png")
+
+if (!file.exists(dfmt_plot_output_path)) {
+  ggsave(dfmt_boxplot_output_path, plot = dfmt_box_plot, width = 6, height = 4)
+  cat("\nPlot for variable 'DFMT' saved successfully.\n")
+} else {
+  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
+}
+
+# Summary statistics for DFMT (Decayed, Filled, Missing Teeth) against DepCat
+dfmt_by_depcat_summary <- dental_data %>%
+  group_by(DepCat) %>%
+  summarise(across(DFMT, 
+                   .fns = list(
+                     N = ~sum(!is.na(.)),          # Sample size
+                     N_total = ~sum(!is.na(.)),     # Total non-missing values
+                     Mean = ~mean(., na.rm = TRUE), # Mean
+                     SE_Mean = ~sd(., na.rm = TRUE) / sqrt(sum(!is.na(.))),  # Standard Error of the Mean
+                     StDev = ~sd(., na.rm = TRUE),  # Standard Deviation
+                     Min = ~min(., na.rm = TRUE),   # Minimum
+                     Q1 = ~quantile(., 0.25, na.rm = TRUE),  # First Quartile
+                     Median = ~median(., na.rm = TRUE),      # Median
+                     Q3 = ~quantile(., 0.75, na.rm = TRUE),  # Third Quartile
+                     Max = ~max(., na.rm = TRUE)    # Maximum
+                   ), 
+                   .names = "{.col}_{.fn}"))
+cat("\nSummary statistics calculated for decayed, filled or missing teeth across each category of deprivation:\n")
+print.data.frame(dfmt_by_depcat_summary)
+
+# Visualisation: Value Plot for DFMT by DepCat
+dfmt_value_plot_depcat <- ggplot(dental_data, aes(x = factor(DFMT), y = DFMT)) +
+  geom_point(position = position_jitter(width = 0.2), shape = 19, size = 3, alpha = 0.7) +
+  labs(title = "Individual Value Plot of DFMT", x = "", y = "Number of decayed, filled or missing teeth") +
+  theme(axis.text.x = element_blank())  # To hide x-axis label since it's not meaningful in this context
+
+# Save the plot with checking for existing file
+dfmt_value_plot_depcat_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_value_plot_depcat.png")
+
+if (!file.exists(dfmt_value_plot_depcat_output_path)) {
+  ggsave(dfmt_value_plot_depcat_output_path, plot = dfmt_value_plot_depcat, width = 6, height = 4)
+  cat("\nPlot for variable 'DFMT' saved successfully.\n")
+} else {
+  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
+}
+
+# Visualisation: Box Plot for DFMT
+dfmt_box_plot_depcat <- ggplot(dental_data, aes(x = factor(DepCat)DFMT", y = DFMT)) +
+  geom_boxplot(fill = plot_fill_colour) +
+  labs(title = "Box Plot of DFMT", x = "", y = "Number of decayed, filled or missing teeth") +
+  theme(axis.text.x = element_blank())  # To hide x-axis label since it's not meaningful in this context
+
+# Save the plot with checking for existing file
+dfmt_boxplot_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_box_plot.png")
+
+if (!file.exists(dfmt_plot_output_path)) {
+  ggsave(dfmt_boxplot_output_path, plot = dfmt_box_plot, width = 6, height = 4)
+  cat("\nPlot for variable 'DFMT' saved successfully.\n")
+} else {
+  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
+}
+
+
+
+
+
+
+
 # Further analysis: 2-sample t-test
 # Create the binary variable "Poorest"
 test_data <- dental_data %>%
-  mutate(Poorest = if_else(DepCat == 7, "1", "0"))
+  mutate(Poorest = if_else(DepCat == 7, "0", "1"))
 cat("\nPoorest area flag created in data table\n")
 
 # Visualisation: Box Plot for DFMT to test t-test assumptions
