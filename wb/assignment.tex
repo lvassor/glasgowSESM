@@ -1,0 +1,273 @@
+\documentclass[11pt]{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=1in,bottom=1in,left=1in,right=1in]{geometry}
+%,marginparwidth=1.75cm
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{parskip}
+\usepackage{gensymb}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} % Clear existing header and footer
+\rfoot{\thepage} % Page number on the right
+\lfoot{GUID: 2957161} % Your student ID on the left
+
+% \usepackage{helvet}
+% \renewcommand{\rmdefault}{\sfdefault}
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{placeins}
+\usepackage{subcaption}
+\lstset{
+    backgroundcolor=\color{gray!10}, % set the background color
+    basicstyle=\ttfamily,
+    numbers=left,
+    numberstyle=\tiny,
+    frame=single,
+    frameround=tttt,
+    tabsize=4,
+    breaklines=true,
+    captionpos=b
+}
+
+
+\title{MED5538 Evidence Based Biomedical Research Methods and Statistics - Statistics Assignment}
+\author{GUID: 2957161}
+
+\begin{document}
+\maketitle
+
+\section{Question 1}
+\subsection{Using either Minitab or SPSS, obtain appropriate descriptive statistics and suitable plots for the variables Sex, DepCat, RegCat and DFMT individually (i.e. do not look at any relationships between these variables). Provide a short interpretation of the output you produce for each variable.}
+
+The data in the sample are all complete except one entry, which contains a NA value for deprivation category. Since we are comparing dental health between areas with different deprivation categories, this record was removed.
+
+\subsubsection*{Sex}
+
+Sex is a categorical variable, coded as as 1 for male and 2 for female in our dataset, summary below:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Sex & Count & Proportion \\
+\hline
+1 & 40 & 40.404 \\
+2 & 59 &  59.596 \\
+\hline
+\end{tabular}
+\caption{Summary statistics of variable ``Sex" in the sample data.}
+\label{tab:sex-data}
+\end{table}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{outputs/sex_barplot.png}
+  \caption{Bar plot showing counts of each sex in the sample data.}
+  \label{fig:sex-barplot}
+\end{figure}
+\FloatBarrier  % Ensure the figure is placed before this point
+
+
+Removing the NA value leaves 40 male and 59 female individuals in the sample, giving us a moderately even spread between the sexes, although containing more females than males. Should there be sex-based differences in dental health, this perhaps would present some issues with our sample. However, this is unlikely and this sample population provides good representation of both sexes.
+
+\subsubsection*{RegCat}
+
+RegCat is a categorical variable representing registration status of individuals in the sample population. This details whether they were previously registered with a dental surgery but their registration lapsed (``Lapsed"), never registered (``NotReg"), or currently registered with a dentist (``Reg"). Summary below:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|r|r|}
+\hline
+RegCat & Count & Proportion \\
+\hline
+Lapsed & 10 & 10.101 \\
+NotReg & 42 & 42.424 \\
+Reg & 47 & 47.475 \\
+\hline
+\end{tabular}
+\caption{Summary statistics of variable ``RegCat" (Registration Category) in the sample data.}
+\label{tab:regcat-data}
+\end{table}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{outputs/regcat_barplot.png}
+  \caption{Bar plot showing counts of each registration category in the sample data.}
+  \label{fig:regcat-barplot}
+\end{figure}
+\FloatBarrier  % Ensure the figure is placed before this point
+
+As the table data shows, there is an approximate 50/50 spread between individuals currently registered with a dentist (Reg) and those who are not (either Lapsed or NotReg). This equal representation is important for the study since we may expect a correlation between those currently registered with a dental surgery and their dental health and hygiene.  
+
+\subsubsection*{DepCat}
+
+DepCat is a categorical variable representing deprivation category for the postcode sector of the record, including levels 4, 6 and 7, where 7 is most deprived. Summary statistics are as follows:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|r|r|r|}
+\hline
+DepCat & Count & Proportion \\
+\hline
+4 & 18 & 18.180 \\
+6 & 33 & 33.330 \\
+7 & 48 & 48.480 \\
+\hline
+\end{tabular}
+\caption{Summary statistics of variable ``DepCat" (Deprivation Category) in the sample data.}
+\label{tab:depcat-data}
+\end{table}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{outputs/depcat_barplot.png}
+  \caption{Bar plot showing counts of each deprivation category in the sample data.}
+  \label{fig:depcat-barplot}
+\end{figure}
+\FloatBarrier  % Ensure the figure is placed before this point
+
+DepCat = 7 represents the greatest level of deprivation in this study, and makes up the greatest proportion of the sample (almost 50\%), contrasted with the more affluent DepCat = 4, representing less than 20\% of the sample with 18 individuals. Small absolute counts such as this can make mean averages more susceptible to outliers and introduce greater variability, presenting issues in comparative tests between populations and reducing statistical power. In addition, sample sizes of less than 30 can begin to present challenges for certain statistical tests, which only hold at larger sample sizes. DepCat = 6 has a count of 33, which is a moderate sample size, however across all 3 categories, given that DepCat = 6 still represents deprived areas, there is a greater representation of deprived areas in the data versus affluent. Since we are making comparisons of dental health between deprived and affluent areas, ideally there would be a more even coverage than presented in the sample population.
+
+%Children in the most deprived area (DepCat=7) have the greatest number of decayed, filled or missing teeth (DFMT) on average (mean=6.35, median=5). In a slightly less deprived area (DepCat=6), children have fewer DFMT (mean=3.78, median=2). In the least deprived/most affluent area of the sample (DepCat=4), the average DFMT is interesting insofar that the mean is slightly less (mean=3.22), while the median is greater (median=3) than DepCat=6. This indicates that in DepCat 6 at least 50\% of children in the population have a maximum of 2 DFMT whule in a more affluent area (DepCat 4), 50\% of the children have a maximum of 3 DFMT - an interesting observation. However since the DepCat 6 mean is higher, this suggests that there are several extreme values which skew the mean average to be greater than DepCat 4, which is confimed by the greater standard deviation of 4.73 versus 3.08. DepCat 7 shows that for both mean and median values, DFMT is greater, however DepCat 7 also has the greatest standard deviation at 5.33. The median suggests that in the most deprived area, overall there is a greater count of DFMT, howver the trend of greater means and standard deviations as the area becomes more deprived suggests that more deprived areas give way to more extreme values which skew the averages.
+
+\subsubsection*{DFMT}
+DFMT is the study's dependent variable (numeric), representing the count of decayed, filled or missing teeth in the individual. Removal of NA values leaves a sample population of 99 individuals, with an average DFMT count of somewhere between 4-5 (mean=4.929, median=4).
+\begin{lstlisting}[language=TeX, caption={Summary statistics for variable: DFMT}]
+DFMT    N   Mean    SE_Mean StDev   Min Q1      Median  Q3      Max
+
+1       99  4.929   0.498   4.955   0   0.000   4       8.500   20
+\end{lstlisting}
+
+\begin{figure}[ht]
+  \begin{subfigure}{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{outputs/dfmt_box_plot.png}
+    \caption{Boxplot of DFMT counts in sample data.\newline}
+    \label{fig:dfmt_boxplot}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{outputs/dfmt_value_plot.png}
+    \caption{Individual value plot of DMFT counts in sample data. Mean shown as dark blue diamond.}
+    \label{fig:dfmt_valueplot}
+  \end{subfigure}
+  \caption{Summary plots for variable: DFMT}
+  \label{fig:dfmt_figures}
+\end{figure}
+\FloatBarrier  % Ensure the figure is placed before this point
+
+There is a substantial range of DFMT values in the dataset - while the mean is 4.929, the range spreads from 0 to 20 teeth. If this is an accurate entry (no recording error), this certainly represents an extreme case of poor dental health, as do the other sub-maximal extreme values, represented by the whisker in \ref{fig:dfmt_boxplot} and the individual value plot \ref{fig:dfmt_valueplot}. Whilst the median and mean are almost equal, and \(Q3-Median \approx Median-Q2\), overall the data are not symmetric, shown by the asymmetry of the whiskers in \ref{fig:dfmt_boxplot}. Overall very low value counts (around 0-2) make up a large proportion of the sample, as shown by Q1 and the values in \ref{fig:dfmt_valueplot}.
+
+\newpage
+\subsection{Using either Minitab or SPSS carry out a 2-sample t-test and confidence interval to investigate whether there is a difference between oral health, as measured by DFMT, in the poorest areas (DepCat 7) and in less deprived areas.}
+\subsubsection*{Descriptive Statistics: DFMT}
+
+\begin{lstlisting}[language=TeX, caption={Summary statistics for DFMT across Poorest groups}]
+Poorest N   Mean    SE_Mean StDev   Min Q1      Median  Q3      Max
+0       51  3.588   0.588   4.196   0   0.000   3.000   5.500   17
+1       48  6.354   0.770   5.334   0   1.750   5.000   10.000  20
+\end{lstlisting}
+
+\begin{figure}[ht]
+  \begin{subfigure}{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{outputs/dfmt_box_plot_poorest.png}
+    \caption{Boxplot of DFMT counts in sample data.\newline}
+    \label{fig:dfmt_poorest_boxplot}
+  \end{subfigure}%
+  \hfill
+  \begin{subfigure}{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{outputs/dfmt_value_plot_poorest.png}
+    \caption{Individual value plot of DMFT counts in sample data. Mean shown as dark blue diamond.}
+    \label{fig:dfmt_poorest_valueplot}
+  \end{subfigure}
+  \caption{Summary plots for variable: DFMT}
+  \label{fig:dfmt_figures}
+\end{figure}
+\FloatBarrier  % Ensure the figure is placed before this point
+
+\subsubsection*{Subjective Impression and Assumption Checking}
+Children in the poorest areas (Poorest group 1) have an average decayed, missing or filled teeth (DFMT) count of approximately 5-6 (mean=6.35, median = 5). Children not living in the poorest areas (Poorest group 0) have an average DFMT count of around 3 (mean=3.588, median=3). This may be a significant difference but this is unclear, given the variability of the data (standard deviation for group 0 = 4.20 and group 1 = 5.33, and the two boxes overlap substantially). The sample size for each group exceeds the $n=30$ threshold, below which some statistical tests begin to lose robustness, however the standard deviation for each group is certainly large relative to its respective mean and sample size, indicating that the means are being skewed by extreme values, supported by each group's lower median. This is also supported by the size of the upper whiskers and shown by the spread in the individual values plot.
+
+Both distributions in the dental dataset seem to depart from normality: they are not symmetric, the median for group 0 is roughly at the mid-point of Q1 to Q3 however this is not so for group 1; and whiskers are not similar lengths within and between groups. In group 0, the mean is similar to the median however this is not the case for group 1 (see blue diamond in \ref{fig:dfmt_poorest_valueplot} against median line in \ref{fig:dfmt_poorest_boxplot}). We assume that the data were independently and randomly sampled having read the study design. Furthermore, given that the data are count data, meaning they are discrete and non-negative, they do not approximate a normal distribution, especially at the sample sizes collected.  Since normality is an assumption of the t-test, I would conclude from these attributes of the data that they are not appropriate for a t-test, and that a Poisson or negative binomial regression may be more appropriate for the data collected.
+
+Nevertheless, the task is to perform a 2-sample t-test. An assumption of a standard t-test (Student's t) is that variance is equal in both groups. We can assume that the variance between groups is not equal and opt for the Welch's t-test, which is less restrictive than Student's test and does not have this assumption. (Levene's test for equal variances is robust against departures from the normal distribution, however for simplicity, here the Welch's t-test is used with no assumption of equal variance.)
+
+\subsubsection*{Formal Analysis Output}
+\begin{lstlisting}[language=TeX, caption={R output for Welch 2-sample t-test}]
+2-sample t-test result:
+
+
+        Welch Two Sample t-test
+
+data:  DFMT by Poorest
+t = -2.8561, df = 89.241, p-value = 0.005335
+alternative hypothesis: true difference in means between group 0 and group 1 is not equal to 0
+95 percent confidence interval:
+ -4.6901221 -0.8417406
+sample estimates:
+mean in group 0 mean in group 1 
+       3.588235        6.354167 
+\end{lstlisting}
+
+\subsubsection*{Interpretation}
+
+This is a 2-sample t-test and Confidence Interval (CI) comparing DFMT count of children living in the poorest postcode districts of Glasgow (deprivation category of 7), and children living in less poor (less deprived) districts (deprivation categories of 4 and 6), encoded as ``Poorest" groups 1 and 0, respectively. Since a Welch's 2 two-sample t-test was used, we assume heterogeneity of variance by default (unequal), although this can be confirmed with Levene's test, which is robust against departures from normality (not used here).
+
+For the t-test, the $H_0$ is that the population mean DFMT count for the poorest area = population mean DFMT count for non-poorest areas. $H_1$ is that they are unequal. Since the p-value of 0.005335 is less than 0.05, we have sufficient evidence to reject the null hypothesis that DFMT counts are equal for both groups. There is sufficient evidence to conclude that the mean DFMT values are significantly different between the two groups (Poorest 0 and Poorest 1). The negative t-value suggests that the mean DFMT value is lower in group 0 compared to group 1 (since the mean in group 1 is greater (6.354 v 3.588), the test algorithm is comparing 0 to 1, yielding a negative difference). 
+
+The 95\%CI for the difference in means does not include zero, supporting the significance of the result. The CI indicates that in the population we have 95\% confidence that the count of children's DFMT in less poor/more affluent areas of Glasgow is likely to be anywhere between almost 1 (0.842) to almost 5 (4.690) fewer than in the poorest, most deprived areas. Although there is a significant difference between groups, the results are inconclusive since a difference of 1 decayed, missing or filled tooth may not be of significant medical importance, whereas a difference of 5 decayed, missing or filled teeth very likely is. This is especially so given that children have 20 deciduous teeth in early years, and upwards of this en route to growing a full set of 32 teeth as adults. Even by conservatively assuming a full set of 32 teeth (unlikely for children), a difference of 5 teeth being DFM is a substantial proportion. A larger study across other cities in Scotland or the UK, comparing affluent and deprived areas would be needed to answer this, using equal, larger samples across deprivation categories. The population of interest for this may be a greater population across Glasgow, or using a collection of cities across Scotland. Extrapolation of these results to represent differences in dental health between different areas may not be appropriate since children in Glasgow may not be representative of these larger populations.
+
+There are also caveats to consider when interpreting results. Firstly, the aforementioned assumptions of the t-test note that count data (DFMT count) violate the assumption of normality. At large numbers, count data can approximate normal distributions, however the number in the dental data are smaller samples and they are non-negative and not continuous so cannot be normally distributed. Since this assumption is violated, these results are inconclusive, and the study would need to be repeated with a more appropriate test.
+
+%Firstly, it was shown that a large proportion of the sample represented areas with the maximum deprivation category versus the lowest score in this study (48.5\% v 18.2\%). Given the greater standard deviation of DepCat=7 (5.3) compared to the other categories, this means we have a greater sample of children within these categories, with greater spread in the data, versus other categories (despite the outliers shown in the box plot). From this we can say that the mean of poorer areas is likely being subjected to skewing from greater values (note the relative length of the whisker for the poorer group, as well as the mean for DepCat = 6 (which is still relatively deprived) being much closer to that of DepCat =4. A larger study would need to take place in which an equal sample is taken from more affluent areas, as well as greater samples from each category to account for the effect of extreme values and variability in the data.
+
+\section{State the assumptions of regression that can be assessed using residual plots. For each of these, state which residual plot or plots are useful for assessing the assumption and describe how the assumption can be checked, giving brief details of what should be looked for in each plot. [Note: there is no need to analyze any data in this question.]}
+
+The assumptions of a regression are as follows:
+\begin{enumerate}
+    \item Constant variance, or homoscedasticity: the uniformity of the spread of $y_i$ is constant across the range of X. 
+    \item Linearity: the mean value of Y is a linear function of X.
+    \item Independence of observations: observations are not influenced by (or dependent on) one another and are independently sampled.
+    \item Normality of residuals: residuals follow a normal distribution.
+    \item Error-free values for $x$: the values of X are error-free and accurately measured.
+\end{enumerate}
+
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{outputs/residual_plot.png}
+  \caption{Residual plots used to test assumptions of regression. \\ Source: MED5538 course (2024) at the University of Glasgow, taught by McClure, J.}
+  \label{fig:residual-plots}
+\end{figure}
+\FloatBarrier  % Ensure the figure is placed before this point
+
+To test these assumptions with the sample population data, the following plots can be used:
+\begin{enumerate}
+    \item Homoscedasticity: Use a Residual vs Fitted plot (see Figure \ref{fig:residual-plots} top-right) and look for a consistent spread of residuals across the range of fitted values. A horizontal line with constant spread indicates homoscedasticity. A funnel-shaped pattern may suggest heteroscedasticity (violation of assumption).
+    \item Linearity: Again, use a Residual vs Fitted plot. A horizontal line with no discernible pattern indicates linearity. Patterns or curvature may suggest non-linearity or violations of independence.
+    \item Independence of observations: this depends on sampling methodology. A Residuals versus Order (see Figure \ref{fig:residual-plots} bottom-left). This plot can be used to confirm if there is a systematic structure or pattern across residuals. The ideal pattern is a random scatter with no discernible structure. In some cases (such as time series analysis), some data points may be related to data points at previous points in time (autocorrelation). Autocorrelation (which can violate the assumption of independence) can be assessed using Autcorrelation Function (ACF) plots. Spikes on the plot represent correlation at different time lags. There should be significant autocorrelation at a time lag of 0 since any observation is perfectly correlated with itself. There should be no significant autocorrelation at other time lags. If there are significant spikes or patterns at non-zero lags, this may be indicative of some structure or dependency in the data.
+    \item Normality of residuals: Use a Normal Q-Q plot (quantile-quantile plot) or ``Normal Probability Plot" of residuals (see Figure \ref{fig:residual-plots} top-left). This  plot assesses whether the dataset follows a theoretical normal distribution by plotting observed quantiles (from the sample population) on the $y$-axis against theoretical, normal quantiles on the $x$-axis. A roughly linear relationship (plots typically contain a reference line) indicates that the observed data follow a normal distribution, meeting this assumption. Data will typically not be perfectly normally distributed, and a sigmoid pattern is usually expected, which is still indicative of normality. More pronounced deviations like skewness or heavy tails indicate a departure from normality. A histogram can also be used (Figure \ref{fig:residual-plots} bottom-left) to see whether the distribution of values approximates the shape of a bell-curve).
+    \item Error-free values for $x$: Not directly assessed through residual plots. This involves careful data collection and validation processes during the study design and data gathering phases.
+\end{enumerate}
+
+
+
+% \newpage
+% \bibliographystyle{agsm}
+% \bibliography{researchproposal}
+
+\end{document}

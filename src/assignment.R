@@ -1,3 +1,4 @@
+
 # Install and load required packages
 install_and_load <- function(package_name) {
   if (!requireNamespace(package_name, quietly = TRUE)) {
@@ -12,22 +13,13 @@ chooseCRANmirror(ind = 46)
 install_and_load("dplyr")
 install_and_load("ggplot2")
 install_and_load("car")
+install_and_load("xtable")
+
 
 options(dplyr.print_max = Inf)
 # Reset the print_max option to its default value
 # options(dplyr.print_max = 20)  # You can adjust this value based on your preference
-# ggplot styling
-plot_theme <- theme(
-    plot.background = element_rect(fill = "gray"),  # Gray background outside the chart area
-    panel.background = element_rect(fill = "white"),  # White background inside the chart area
-    axis.line = element_line(color = "black", linewidth = 0.4),  # Solid axis lines
-    panel.grid = element_blank(),  # Remove grid lines
-    legend.position = "none",  # Remove the legend
-    plot.title = element_text(hjust = 0.5)
-  )
 
-plot_fill_colour <- "#71a9de"
-  
 # Relevant paths
 ASSIGNMENT_DATA_PATH = "../data/assignment"
 ASSIGNMENT_OUTPUT_PATH = "../output/assignment"
@@ -40,6 +32,35 @@ if (!dir.exists(ASSIGNMENT_OUTPUT_PATH)) {
 } else {
   cat("Assignments folder already exists.\n")
 }
+
+# Save function
+save_plot <- function(output_path, plot) {
+  if (!file.exists(output_path)) {
+    ggsave(output_path, plot = plot, width = 6, height = 4)
+    cat(paste("\nPlot saved successfully:", output_path, "\n"))
+  } else {
+    if (overwrite) {
+      ggsave(output_path, plot = plot, width = 6, height = 4)
+      cat(paste("\nPlot saved successfully (overwritten):", output_path, "\n"))
+    } else {
+      cat(paste("\nFile already exists. Plot not saved to prevent overwriting:", output_path, "\n"))
+    }
+  }
+}
+
+# ggplot styling
+plot_theme <- theme(
+    plot.background = element_rect(fill = "gray"),  # Gray background outside the chart area
+    panel.background = element_rect(fill = "white"),  # White background inside the chart area
+    axis.line = element_line(color = "black", linewidth = 0.4),  # Solid axis lines
+    panel.grid = element_blank(),  # Remove grid lines
+    legend.position = "none",  # Remove the legend
+    plot.title = element_text(hjust = 0.5)
+  )
+PLOT_FILL_COLOR <- "#71a9de"
+  
+# Overwrite flag for outputs
+overwrite <- TRUE
 
 # Specify the path to your CSV file
 dental_data_file_path <- file.path(ASSIGNMENT_DATA_PATH, "Dental_2957161.csv")
@@ -69,13 +90,6 @@ cat("\nCounts and proportions of each sex calculated:\n")
 print(sex_prop_result)
 
 # Visualisation: Plot for Sex proportions
-# sex_barplot <- ggplot(sex_prop_result, aes(x = factor(Sex), y = n, fill = factor(Sex))) +
-#   geom_bar(stat = "identity", position = "dodge", fill = "#71a9de") +
-#   labs(title = "Count of each sex in dental data sample", x = "Sex", y = "Count") +
-#   # scale_fill_manual(values=c("#71a9de")) +
-#   scale_x_discrete(labels = c("1" = "1 = Male", "2" = "2 = Female")) +  # Customize x-axis labels
-#   theme(legend.position = "none")  # Remove the legend
-
 sex_barplot <- ggplot(sex_prop_result, aes(x = factor(Sex), y = n, fill = factor(Sex))) +
   geom_bar(stat = "identity", position = "dodge", fill = plot_fill_colour, color = "black", linewidth = 0.4, width=0.5) +
   labs(title = "Count of each sex", x = "Sex", y = "Count") +
@@ -84,14 +98,9 @@ sex_barplot <- ggplot(sex_prop_result, aes(x = factor(Sex), y = n, fill = factor
   scale_y_continuous(expand = c(0, 0), limits = c(min(0, min(sex_prop_result$n)), max(sex_prop_result$n) + 5)) +
   plot_theme
 
-# Save the plot with checking for existing file
+# Save the plot
 sex_plot_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "sex_barplot.png")
-if (!file.exists(sex_plot_output_path)) {
-  ggsave(sex_plot_output_path, plot = sex_barplot, width = 6, height = 4)
-  cat("\nPlot for variable 'Sex' saved successfully.\n")
-} else {
-  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
-}
+save_plot(sex_plot_output_path, sex_barplot)
 
 # Summary statistics for DepCat
 depcat_prop_result <- dental_data %>%
@@ -99,7 +108,7 @@ depcat_prop_result <- dental_data %>%
   mutate(proportion = 100 * n / sum(n))
 
 cat("\nCounts and proportions of each deprivation category calculated:\n") 
-depcat_prop_result
+print(depcat_prop_result)
 
 # Visualisation: Plot for DepCat proportions
 depcat_barplot <- ggplot(depcat_prop_result, aes(x = factor(DepCat), y = n, fill = factor(DepCat))) + # nolint
@@ -109,15 +118,9 @@ depcat_barplot <- ggplot(depcat_prop_result, aes(x = factor(DepCat), y = n, fill
   scale_y_continuous(expand = c(0, 0), limits = c(min(0, min(depcat_prop_result$n)), max(depcat_prop_result$n) + 5)) +
   plot_theme
 
-# Save the plot with checking for existing file
+# Save the plot 
 depcat_plot_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "depcat_barplot.png")
-
-if (!file.exists(depcat_plot_output_path)) {
-  ggsave(depcat_plot_output_path, plot = depcat_barplot, width = 6, height = 4)
-  cat("\nPlot for variable 'DepCat' saved successfully.\n")
-} else {
-  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
-}
+save_plot(depcat_plot_output_path, depcat_barplot)
 
 # Summary statistics for RegCat
 regcat_prop_result <- dental_data %>%
@@ -135,15 +138,9 @@ regcat_barplot <- ggplot(regcat_prop_result, aes(x = factor(RegCat), y = n, fill
   scale_y_continuous(expand = c(0, 0), limits = c(min(0, min(regcat_prop_result$n)), max(regcat_prop_result$n) + 5)) +
   plot_theme
 
-# Save the plot with checking for existing file
+# Save the plot
 regcat_plot_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "regcat_barplot.png")
-
-if (!file.exists(regcat_plot_output_path)) {
-  ggsave(regcat_plot_output_path, plot = regcat_barplot, width = 6, height = 4)
-  cat("\nPlot for variable 'RegCat' saved successfully.\n")
-} else {
-  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
-}
+save_plot(regcat_plot_output_path, regcat_barplot)
 
 # Summary statistics for DFMT (Decayed, Filled, Missing Teeth)
 dfmt_summary <- dental_data %>%
@@ -173,15 +170,9 @@ dfmt_value_plot <- ggplot(dental_data, aes(x = "DFMT", y = DFMT)) +
   theme_minimal() + 
   plot_theme
 
-# Save the plot with checking for existing file
+# Save the plot
 dfmt_value_plot_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_value_plot.png")
-
-if (!file.exists(dfmt_value_plot_output_path)) {
-  ggsave(dfmt_value_plot_output_path, plot = dfmt_value_plot, width = 6, height = 4)
-  cat("\nPlot for variable 'DFMT' saved successfully.\n")
-} else {
-  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
-}
+save_plot(dfmt_value_plot_output_path, dfmt_value_plot)
 
 # Visualisation: Box Plot for DFMT
 dfmt_box_plot <- ggplot(dental_data, aes(x = "DFMT", y = DFMT)) +
@@ -189,16 +180,11 @@ dfmt_box_plot <- ggplot(dental_data, aes(x = "DFMT", y = DFMT)) +
   labs(title = "Boxplot of DFMT", x = "", y = "Number of decayed, filled or missing teeth") +
   theme(axis.text.x = element_blank()) +  # To hide x-axis label since it's not meaningful in this context
   theme_minimal() + 
-  plot_theme  
-# Save the plot with checking for existing file
-dfmt_boxplot_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_box_plot.png")
+  plot_theme
 
-if (!file.exists(dfmt_boxplot_output_path)) {
-  ggsave(dfmt_boxplot_output_path, plot = dfmt_box_plot, width = 6, height = 4)
-  cat("\nPlot for variable 'DFMT' saved successfully.\n")
-} else {
-  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
-}
+# Save the plot
+dfmt_boxplot_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_box_plot.png")
+save_plot(dfmt_boxplot_output_path, dfmt_box_plot)
 
 # Summary statistics for DFMT (Decayed, Filled, Missing Teeth) against DepCat
 dfmt_by_depcat_summary <- dental_data %>%
@@ -228,15 +214,9 @@ dfmt_value_plot_depcat <- ggplot(dental_data, aes(x = factor(DepCat), y = DFMT))
   theme_minimal() + 
   plot_theme
 
-# Save the plot with checking for existing file
+# Save the plot
 dfmt_value_plot_depcat_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_value_plot_depcat.png")
-
-if (!file.exists(dfmt_value_plot_depcat_output_path)) {
-  ggsave(dfmt_value_plot_depcat_output_path, plot = dfmt_value_plot_depcat, width = 6, height = 4)
-  cat("\nPlot for variable 'DFMT' saved successfully.\n")
-} else {
-  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
-}
+save_plot(dfmt_value_plot_depcat_output_path, dfmt_value_plot_depcat)
 
 # Visualisation: Box Plot for DFMT by DepCat
 dfmt_box_plot_depcat <- ggplot(dental_data, aes(x = factor(DepCat), y = DFMT)) +
@@ -247,13 +227,7 @@ dfmt_box_plot_depcat <- ggplot(dental_data, aes(x = factor(DepCat), y = DFMT)) +
 
 # Save the plot with checking for existing file
 dfmt_boxplot_depcat_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_box_plot_depcat.png")
-
-if (!file.exists(dfmt_boxplot_depcat_output_path)) {
-  ggsave(dfmt_boxplot_depcat_output_path, plot = dfmt_box_plot_depcat, width = 6, height = 4)
-  cat("\nPlot for variable 'DFMT' saved successfully.\n")
-} else {
-  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
-}
+save_plot(dfmt_boxplot_depcat_output_path, dfmt_box_plot_depcat)
 
 # Further analysis: 2-sample t-test
 # Create the binary variable "Poorest"
@@ -281,7 +255,6 @@ dfmt_by_poorest_summary <- test_data %>%
 cat("\nSummary statistics calculated for decayed, filled or missing teeth across each category of poorest:\n")
 print.data.frame(dfmt_by_poorest_summary)
 
-
 # Visualisation: Value Plot for DFMT by DepCat
 dfmt_value_plot_poorest <- ggplot(test_data, aes(x = factor(Poorest), y = DFMT)) +
   geom_point(position = position_jitter(width = 0.2), shape = 19, size = 3, alpha = 0.7, width = 0.5, color = plot_fill_colour) +
@@ -290,36 +263,25 @@ dfmt_value_plot_poorest <- ggplot(test_data, aes(x = factor(Poorest), y = DFMT))
   theme_minimal() + 
   plot_theme
 
-# Save the plot with checking for existing file
+# Save the plot
 dfmt_value_plot_poorest_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_value_plot_poorest.png")
-
-if (!file.exists(dfmt_value_plot_poorest_output_path)) {
-  ggsave(dfmt_value_plot_poorest_output_path, plot = dfmt_value_plot_poorest, width = 6, height = 4)
-  cat("\nPlot for variable 'DFMT' saved successfully.\n")
-} else {
-  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
-}
+save_plot(dfmt_value_plot_poorest_output_path, dfmt_value_plot_poorest)
 
 # Visualisation: Value Plot for DFMT to test t-test assumptions
 dfmt_box_plot_poorest <- ggplot(test_data, aes(x = factor(Poorest), y = DFMT)) +
   geom_boxplot(fill = plot_fill_colour, width=0.5) +
-  labs(title = "Boxplot of DFMT", x = "Poorest Group", y = "DFMT Values") +
+  labs(title = "Boxplot of DFMT", x = "Poorest Group", y = "Number of decayed, filled or missing teeth") +
   theme_minimal() +
   plot_theme
 # Save the plot with checking for existing file
 dfmt_boxplot_poorest_output_path <- file.path(ASSIGNMENT_OUTPUT_PATH, "dfmt_box_plot_poorest.png")
-
-if (!file.exists(dfmt_boxplot_poorest_output_path)) {
-  ggsave(dfmt_boxplot_poorest_output_path, plot = dfmt_box_plot_poorest, width = 6, height = 4)
-  cat("\nPlot for variable 'DFMT' saved successfully.\n")
-} else {
-  cat("\nFile already exists. Plot not saved to prevent overwriting.\n")
-}
+save_plot(dfmt_boxplot_poorest_output_path, dfmt_box_plot_poorest)
 
 # Perform Levene's test of equal variances
 levene_test <- leveneTest(DFMT ~ Poorest, data = test_data)
-print(levene_test)
 cat("\nNB: Levene Test not required if using Welch")
+print(levene_test)
+
 
 # Perform a 2-sample t-test
 t_test_result <- t.test(DFMT ~ Poorest, data = test_data)
